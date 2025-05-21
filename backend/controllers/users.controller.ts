@@ -45,3 +45,26 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({success: false, message: 'Internal server error' });
     }
 }
+
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+    const { userName, password } = req.body;
+    if (!userName || !password) {
+        res.status(400).json({ success: false, message: 'All fields are required' });
+        return;
+    }
+    try {
+        const user = await User.findOne({ userName });
+        if (!user) {
+            res.status(404).json({ success: false, message: 'User not found' });
+            return;
+        }
+        if (user.password !== password) {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+            return;
+        }
+        res.status(200).json({ success: true, message: 'Login successful', data: user });
+    } catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
