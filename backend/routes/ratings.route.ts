@@ -1,9 +1,9 @@
 import express from 'express';
-import { createRating, getRatingsByUserId } from '../controllers/movies.controller';
+import { createRating, getRatingsByUserId } from '../controllers/ratings.controller';
 
 const router = express.Router();
 
-router.get('/api/ratings/:userId', getRatingsByUserId);
-router.post('/api/ratings', createRating);
+router.get('/:userId', getRatingsByUserId);
+router.post('/', createRating);
 
 export default router;

@@ -1,143 +1,40 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Rating from '../models/rating.model';
-import User from '../models/user.model';
-import { getMovieDetails, getMovieBySearch } from '../services/movieAPI.service';
 
-export const addToFavoritesOrPlanned = async (req: express.Request, res: express.Response): Promise<void> => { 
+export const getRatingsByUserId = async (req: express.Request, res: express.Response): Promise<void> => {
     const { userId } = req.params;
-    const { movieId, listType } = req.body; // `listType` can be "favorite" or "planned"
-
-    if (!movieId || !listType || !['favorite', 'planned'].includes(listType)) {
-        res.status(400).json({ success: false, message: 'Invalid request. Provide a valid movieId and listType ("favorite" or "planned").' });
-        return;
-    }
 
     try {
-        const updateField = listType === 'favorite' ? 'favoriteMovies' : 'plannedMovies';
-
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { $addToSet: { [updateField]: movieId } }, 
-            { new: true }
-        );
-
-        if (!updatedUser) {
-            res.status(404).json({ success: false, message: 'User not found.' });
-            return;
-        }
-
-        res.status(200).json({ success: true, data: updatedUser });
+        const ratings = await Rating.find({ userId: new mongoose.Types.ObjectId(userId) });
+        res.status(200).json({ success: true, data: ratings });
     } catch (error) {
-        console.error('Error updating user movies:', error);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
-    }
-}
-export const removeFromFavoritesOrPlanned = async (req: express.Request, res: express.Response): Promise<void> => {
-    const { userId } = req.params;
-    const { movieId, listType } = req.body; // `listType` can be "favorite" or "planned"
-
-    if (!movieId || !listType || !['favorite', 'planned'].includes(listType)) {
-        res.status(400).json({ success: false, message: 'Invalid request. Provide a valid movieId and listType ("favorite" or "planned").' });
-        return;
-    }
-
-    try {
-        const updateField = listType === 'favorite' ? 'favoriteMovies' : 'plannedMovies';
-
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { $pull: { [updateField]: movieId } }, 
-            { new: true }
-        );
-
-        if (!updatedUser) {
-            res.status(404).json({ success: false, message: 'User not found.' });
-            return;
-        }
-
-        res.status(200).json({ success: true, data: updatedUser });
-    } catch (error) {
-        console.error('Error updating user movies:', error);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
-    }
-}
-
-export const getMovieByIdOrTitle = async (req: express.Request, res: express.Response): Promise<void> => { 
-    const { movieIdOrTitle } = req.params;
-    const { details } = req.query;
-
-    try {
-        // Check if the parameter is an IMDb ID (starts with "tt" and followed by digits)
-        const isImdbId = /^tt\d+$/.test(movieIdOrTitle);
-        const movieDetails = isImdbId
-            ? await getMovieDetails(movieIdOrTitle)
-            : await getMovieDetails('', movieIdOrTitle);
-
-        if (!movieDetails || movieDetails.Response === 'False') {
-            res.status(404).json({ success: false, message: 'Movie not found.' });
-            return;
-        }
-        if (details === 'basic') {
-            res.status(200).json({
-                success: true,
-                data: {
-                    title: movieDetails.Title,
-                    poster: movieDetails.Poster,
-                    genre: movieDetails.Genre,
-                    rating: movieDetails.imdbRating,
-                },
-            });
-        } else {
-            const ratings = await Rating.find({ movieId: movieDetails.imdbID });
-            if (!ratings) {
-                res.status(404).json({ success: false, message: 'Ratings not found.' });
-                return;
-            }
-            res.status(200).json({
-                success: true,
-                data: {
-                    title: movieDetails.Title,
-                    released: movieDetails.Released,
-                    genre: movieDetails.Genre,
-                    plot: movieDetails.Plot,
-                    poster: movieDetails.Poster,
-                    rating: movieDetails.imdbRating,
-                    comments: ratings.map((r) => ({
-                        userId: r.userId,
-                        rating: r.rating,
-                        comment: r.comment,
-                    })),
-                },
-            });
-        }
-    } catch (error) {
-        console.error('Error fetching movie details:', error);
+        console.error('Error fetching ratings:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
-}; 
+};
 
-export const getMovieBySearching = async (req: express.Request, res: express.Response): Promise<void> => {
-    const { search } = req.query; 
-    const { page = '1' } = req.query; 
+export const createRating = async (req: express.Request, res: express.Response): Promise<void> => {
+    const { userId, userName, movieId, rating, comment } = req.body;
 
-    if (!search || typeof search !== 'string') {
-        res.status(400).json({ success: false, message: 'Search term is required and must be a string.' });
+    if (!userName || !userId || !movieId || rating === undefined || !comment) {
+        res.status(400).json({ success: false, message: 'All fields are required' });
         return;
     }
-    if (typeof page !== 'string' || isNaN(Number(page))) {
-        res.status(400).json({ success: false, message: 'Invalid page number.' });
-        return;
-    }
+
     try {
-        const movies = await getMovieBySearch(search, Number(page));
-        if (!movies || movies.Response === 'False') {
-            res.status(404).json({ success: false, message: 'Movies not found.' });
-            return;
-        }
-        res.status(200).json({ success: true, data: movies.Search });
+        const newRating = new Rating({
+            userId, 
+            userName, // Ensure userName is saved
+            movieId,
+            rating,
+            comment,
+        });
+
+        await newRating.save();
+        res.status(201).json({ success: true, data: newRating });
     } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error('Error saving rating:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };

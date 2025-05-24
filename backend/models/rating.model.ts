@@ -2,6 +2,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 
 export interface IRating extends Document {
     userId: mongoose.Types.ObjectId;
+    userName: string
     movieId: string; // IMDb ID of the movie
     rating: number; 
     comment: string; 
@@ -14,6 +15,10 @@ const ratingSchema: Schema<IRating> = new mongoose.Schema(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
+            required: true,
+        },
+        userName: {
+            type: String,
             required: true,
         },
         movieId: {

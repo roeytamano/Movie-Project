@@ -1,16 +1,22 @@
 import {Request, Response } from 'express';
 import User from '../models/user.model';
+import mongoose from 'mongoose';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
-    const { user } = req.params;
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        res.status(400).json({ success: false, message: 'Invalid user ID format.' });
+        return;
+    }
 
     try {
-        const foundUser = await User.findOne({ userName: user });
-        if (!foundUser) {
+        const user = await User.findById(userId);
+        if (!user) {
             res.status(404).json({ success: false, message: 'User not found' });
             return;
         }
-        res.status(200).json({ success: true, data: foundUser });
+        res.status(200).json({ success: true, data: user });
     } catch (error) {
         console.error('Error fetching user:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -62,7 +68,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
             return;
         }
-        res.status(200).json({ success: true, message: 'Login successful', data: user });
+        res.status(200).json({ success: true, message: 'Login successful', data: { userName: user.userName, _id: user._id } });
     } catch (error) {
         console.error('Error logging in user:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
