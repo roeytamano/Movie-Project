@@ -46,7 +46,7 @@ const Planned = () => {
       const details = await Promise.all(
         plannedMovies.map(async (movieId) => {
           try {
-            const response = await fetch(`http://www.omdbapi.com/?i=${movieId}&apikey=2cc58735`);
+            const response = await fetch(`https://www.omdbapi.com/?i=${movieId}&apikey=2cc58735`);
             const data = await response.json();
             return data;
           } catch (err) {
