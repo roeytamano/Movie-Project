@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchMovieDetails = async (imdbID: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/movies/${imdbID}`);
+      const response = await fetch(`${API_URL}/api/movies/${imdbID}`);
       const data = await response.json();
   
       if (response.ok) {
@@ -16,7 +18,7 @@ export const fetchMovieDetails = async (imdbID: string) => {
   
 export const fetchUserLists = async (userId: string, imdbID: string) => {
     try {
-        const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const response = await fetch(`${API_URL}/api/users/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -40,7 +42,7 @@ export const handleAddToList = async (
     listType: "favorite" | "planned"
     ) => {
     try {
-        const response = await fetch(`http://localhost:5000/api/movies/${userId}`, {
+        const response = await fetch(`${API_URL}/api/movies/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ movieId: imdbID, listType }),
@@ -82,7 +84,7 @@ export const handleAddComment = async (
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/ratings", {
+      const response = await fetch(`${API_URL}/api/ratings/${imdbID}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
