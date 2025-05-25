@@ -10,7 +10,7 @@ interface SignProps {
 const Sign = (props: SignProps) => {
   const navigate = useNavigate();
   const { login } = useAuth(); // Use AuthContext for login state
-
+  console.log(import.meta.env.VITE_API_URL);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);

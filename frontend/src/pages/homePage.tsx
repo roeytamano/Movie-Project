@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 
 
 const HomePage = () => {
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
