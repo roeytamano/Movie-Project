@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_KEY = process.env.OMDB_API_KEY;
-const OMDB_URL = "http://www.omdbapi.com/";
+const OMDB_URL = "https://www.omdbapi.com/";
 
 export const getMovieDetails = async (movieId: string, title?: string) => {
     try {
