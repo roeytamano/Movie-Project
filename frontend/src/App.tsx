@@ -11,7 +11,7 @@ import Planned from "./pages/planned";
 function App() {
   return (
     <>
-         <Routes>
+      <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignOut />} />
