@@ -39,7 +39,7 @@ interface Movie {
         const data = await response.json();
         console.log(`Movie with ID ${movieID} deleted successfully:`, data);
   
-        // Call the onDelete callback to update the parent state
+        // Call the onDelete callback to update the parent state.
         if (movie.onDelete) {
           movie.onDelete(movieID);
         }
