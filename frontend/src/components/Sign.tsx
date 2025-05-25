@@ -18,19 +18,29 @@ const Sign = (props: SignProps) => {
     const password = formData.get("password") as string;
   
     try {
-      const response = await fetch(`${API_URL}/api/users/users/login`, {
+      const endpoint = props.signIn
+        ? `${API_URL}/api/users/users/login` 
+        : `${API_URL}/api/users/users`; 
+  
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password }),
       });
+  
       const data = await response.json();
   
       if (response.ok) {
-        login(data.data.userName, data.data._id);
-        alert("Login successful!");
-        navigate("/"); // Redirect to home page
+        if (props.signIn) {
+          login(data.data.userName, data.data._id);
+          alert("Login successful!");
+          navigate("/"); 
+        } else {
+          alert("Sign-up successful! Please log in.");
+          navigate("/sign-in");
+        }
       } else {
-        alert(data.message || "Login failed");
+        alert(data.message || (props.signIn ? "Login failed" : "Sign-up failed"));
       }
     } catch (error) {
       console.error("Error:", error);
