@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MovieCard from "../components/movie-card";
 import Navbar from "../components/Navbar";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SearchPage = () => {
   const [query, setQuery] = useState("");
@@ -18,7 +19,7 @@ const SearchPage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/movies?search=${encodeURIComponent(query)}`
+        `${API_URL}/api/movies?search=${encodeURIComponent(query)}`
       );
       const data = await response.json();
 

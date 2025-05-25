@@ -11,7 +11,7 @@ const PORT: number | string = process.env.PORT || 5000;
 
 
 app.use(cors({
-    origin: 'http://localhost:5173', 
+    origin: 'https://movie-project-4lg1gzyzs-roeys-projects-ff182939.vercel.app', 
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true 
 }));

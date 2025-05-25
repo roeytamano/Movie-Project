@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../authContext";
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/movie-card";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Favorite = () => {
     const [favoriteMovies, setFavoriteMovies] = useState<any[]>([]);
@@ -21,7 +22,7 @@ const Favorite = () => {
         setError("");
   
         try {
-          const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+          const response = await fetch(`${API_URL}/api/users/${userId}`);
           const data = await response.json();
   
           if (response.ok) {

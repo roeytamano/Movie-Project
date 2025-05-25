@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Movie {
     imdbID: string;
@@ -22,7 +23,7 @@ interface Movie {
         console.log("Deleting movie with ID:", movieID, "from list:", listType, "for user:", localStorage.userId);
   
         const response = await fetch(
-          `http://localhost:5000/api/movies/${localStorage.userId}?movieId=${movieID}&listType=${listType}`,
+          `${API_URL}/api/movies/${localStorage.userId}?movieId=${movieID}&listType=${listType}`,
           {
             method: "DELETE",
             headers: {
