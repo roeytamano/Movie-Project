@@ -52,7 +52,7 @@ A full-stack web application for discovering, rating, and managing your favorite
 #### 1. Clone the repository
 
 ```sh
-git clone https://github.com/your-username/movie-project.git
+git clone https://github.com/roeytamano/movie-project.git
 cd movie-project
 ```
 
