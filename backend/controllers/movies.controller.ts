@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Rating from '../models/rating.model';
-import User from '../models/user.model';
-import { getMovieDetails, getMovieBySearch } from '../services/movieAPI.service';
+import Rating from '../models/rating.model.js';
+import User from '../models/user.model.js';
+import { getMovieDetails, getMovieBySearch } from '../services/movieAPI.service.js';
 
 export const addToFavoritesOrPlanned = async (req: express.Request, res: express.Response): Promise<void> => { 
     const { userId } = req.params; // Use userId instead of userName

@@ -1,10 +1,10 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import { connectDB } from './config/db';
-import userRoutes from './routes/users.route';
-import movieRoutes from './routes/movies.route';
-import ratingRoutes from './routes/ratings.route';
+import {connectDB} from './config/db.js';
+import userRoutes from './routes/users.route.js';
+import movieRoutes from './routes/movies.route.js';
+import ratingRoutes from './routes/ratings.route.js';
 
 const app: Application = express();
 const PORT: number | string = process.env.PORT || 5000;

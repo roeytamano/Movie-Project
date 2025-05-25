@@ -1,5 +1,5 @@
 import express from 'express';
-import { addToFavoritesOrPlanned, getMovieByIdOrTitle, getMovieBySearching, removeFromFavoritesOrPlanned } from '../controllers/movies.controller';
+import { addToFavoritesOrPlanned, getMovieByIdOrTitle, getMovieBySearching, removeFromFavoritesOrPlanned } from '../controllers/movies.controller.js';
 
 const router = express.Router();
 

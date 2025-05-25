@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Rating from '../models/rating.model';
+import Rating from '../models/rating.model.js';
 
 export const getRatingsByUserId = async (req: express.Request, res: express.Response): Promise<void> => {
     const { userId } = req.params;
